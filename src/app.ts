@@ -9,26 +9,15 @@ import notFound from "./app/middlewares/notFound";
 const app: Application = express();
 
 // ---------------------- Global Middlewares ---------------------- //
-
-// Enable CORS for the frontend URL defined in env variables.
-// `credentials: true` allows cookies and auth headers to be sent cross-origin.
 app.use(cors({ origin: envVariables.FRONTEND_URL, credentials: true }));
-
-// Parse incoming requests with JSON payloads.
 app.use(express.json());
-
-// Parse incoming requests with URL-encoded payloads (form submissions).
 app.use(express.urlencoded({ extended: true }));
-
-// Parse cookies attached to client requests.
 app.use(cookieParser());
 
 // ---------------------- Application Routes ---------------------- //
-
-// Prefix all routes with `/api/v1` for versioning.
 app.use("/api/v1/", router);
 
-// Health-check endpoint — useful for monitoring and testing if server is running.
+// Health-check endpoint
 app.get("/", (req: Request, res: Response) => {
   res
     .status(200)

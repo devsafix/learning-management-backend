@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import { UserServices } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { catchAsync } from "../../utils/catchAsync";
@@ -9,7 +9,7 @@ import { JwtPayload } from "jsonwebtoken";
 const getUsers = async (req: Request, res: Response) => {
   const result = await UserServices.getAllUsers();
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: StatusCodes.OK,
     success: true,
     message: "Users retrieved successfully",
     data: result,
@@ -32,7 +32,7 @@ const updateUser = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CREATED,
+      statusCode: StatusCodes.CREATED,
       message: "User Updated Successfully",
       data: user,
     });
@@ -45,7 +45,7 @@ const getSingleUser = catchAsync(
     const result = await UserServices.getSingleUser(id);
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CREATED,
+      statusCode: StatusCodes.CREATED,
       message: "User Retrieved Successfully",
       data: result.data,
     });
@@ -59,7 +59,7 @@ const getMe = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CREATED,
+      statusCode: StatusCodes.CREATED,
       message: "Your profile Retrieved Successfully",
       data: result.data,
     });

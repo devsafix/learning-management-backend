@@ -3,9 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import { ZodSchema, ZodError } from "zod";
 
 // ---------------------- Request Validation Middleware ---------------------- //
-// Parses and validates incoming request bodies against a Zod schema.
-// Automatically handles JSON parsing for nested "data" field (if present).
-// On validation failure, returns structured 400 response with issues.
 
 export const validateRequest = (schema: ZodSchema<any>) => {
   return async (

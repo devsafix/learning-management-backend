@@ -11,9 +11,7 @@ import { TErrorSources } from "../interfaces/error.types";
 import { envVariables } from "../config/env";
 
 // ---------------------- Global Error Handler ---------------------- //
-// Catches all errors thrown in controllers, services, or middleware.
-// Supports multiple error types: Mongo duplicate key, Mongoose validation, Zod validation, AppError, or generic Error.
-// Formats the response consistently with statusCode, message, and optional errorSources.
+
 export const globalErrorHandler = async (
   err: any,
   req: Request,

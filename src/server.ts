@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import app from "./app";
 import { Server } from "http";
 import { envVariables } from "./app/config/env";
-import { seedSuperAdmin } from "./app/utils/seedAdmin";
 import { connectRedis } from "./app/config/redis.config";
 
 let server: Server;
@@ -29,7 +28,6 @@ async function startServer() {
 (async () => {
   await connectRedis(); // Initialize Redis connection
   await startServer(); // Start MongoDB + Express server
-  await seedSuperAdmin(); // Ensure default admin user exists
 })();
 
 // ---------------------- Process Handlers ---------------------- //

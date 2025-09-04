@@ -6,6 +6,8 @@ export interface IUser {
   name: string;
   email: string;
   password: string | undefined;
+  phone?: string;
+  address?: string;
   role: UserRole;
   isBlocked?: boolean;
   isVerified?: boolean;

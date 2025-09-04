@@ -12,8 +12,10 @@ router.post(
   AuthControllers.register
 );
 router.post("/login", AuthControllers.login);
+router.post("/logout", AuthControllers.logout);
 router.post("/forgot-password", AuthControllers.forgotPassword);
-router.post("/reset-password", checkAuth, AuthControllers.resetPassword);
+router.post("/reset-password", AuthControllers.resetPassword);
+router.patch("/change-password", checkAuth, AuthControllers.changePassword);
 router.post("/refresh-token", AuthControllers.getNewAccessToken);
 
 export const AuthRoutes = router;

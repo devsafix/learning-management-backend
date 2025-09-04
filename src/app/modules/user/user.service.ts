@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { JwtPayload } from "jsonwebtoken";
 import { IUser } from "./user.interface";
 import { User } from "./user.model";
 import AppError from "../../errorHelpers/AppError";
 import { userRoles } from "./user.constant";
-import httpStatus from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 
 const getAllUsers = async () => {
   const users = await User.find().select("-password");
@@ -13,26 +14,29 @@ const getAllUsers = async () => {
 const updateUser = async (
   userId: string,
   payload: Partial<IUser>,
-  decodedToken: JwtPayload
+  decoded: JwtPayload
 ) => {
-  if (decodedToken.role === userRoles.USER) {
-    if (userId !== decodedToken.userId) {
-      throw new AppError(401, "You are not authorized");
-    }
+  const isSelf = userId === decoded.userId;
+  const isAdmin = decoded.role === userRoles.ADMIN;
+
+  if (!isAdmin && !isSelf) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "You are not authorized");
   }
 
-  const ifUserExist = await User.findById(userId);
-
-  if (!ifUserExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+  if (!isAdmin) {
+    // normal user cannot elevate or toggle sensitive flags
+    delete (payload as any).role;
+    delete (payload as any).isVerified;
+    delete (payload as any).isBlocked;
   }
 
-  const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
+  const exists = await User.findById(userId);
+  if (!exists) throw new AppError(StatusCodes.NOT_FOUND, "User Not Found");
+
+  return User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
-  });
-
-  return newUpdatedUser;
+  }).select("-password");
 };
 
 const getSingleUser = async (id: string) => {

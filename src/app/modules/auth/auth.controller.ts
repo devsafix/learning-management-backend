@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { AuthServices } from "./auth.service";
-import httpStatus from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import AppError from "../../errorHelpers/AppError";
@@ -11,21 +11,46 @@ import { JwtPayload } from "jsonwebtoken";
 const register = catchAsync(async (req: Request, res: Response) => {
   const user = await AuthServices.registerUser(req.body);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: StatusCodes.OK,
     success: true,
     message: "Users register successfully",
     data: user,
   });
 });
 
-const login = catchAsync(async (req: Request, res: Response) => {
+const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const result = await AuthServices.loginUser(res, email, password);
+  const { tokens, user } = await AuthServices.loginUser(email, password);
+  setAuthCookie(res, tokens);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: StatusCodes.OK,
     success: true,
-    message: "Users login successfully",
-    data: result,
+    message: "User logged in successfully",
+    data: {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user,
+    },
+  });
+});
+
+const logout = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "User Logged Out Successfully",
+    data: null,
   });
 });
 
@@ -37,34 +62,48 @@ const forgotPassword = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.OK,
+      statusCode: StatusCodes.OK,
       message: "Email Sent Successfully",
       data: null,
     });
   }
 );
 
-const resetPassword = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user;
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  await AuthServices.resetPassword(req.body);
 
-    await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Password reset successfully",
+    data: null,
+  });
+});
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "Password Changed Successfully",
-      data: null,
-    });
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+  const userId = req.user?.userId;
+
+  if (!userId) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Unauthorized");
   }
-);
+
+  await AuthServices.changePassword(userId, oldPassword, newPassword);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Password changed successfully",
+    data: null,
+  });
+});
 
 const getNewAccessToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
       throw new AppError(
-        httpStatus.BAD_REQUEST,
+        StatusCodes.BAD_REQUEST,
         "No refresh token received from cookies"
       );
     }
@@ -76,7 +115,7 @@ const getNewAccessToken = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.OK,
+      statusCode: StatusCodes.OK,
       message: "New Access Token Retrieved Successfully",
       data: tokenInfo,
     });
@@ -86,7 +125,9 @@ const getNewAccessToken = catchAsync(
 export const AuthControllers = {
   register,
   login,
+  logout,
   forgotPassword,
   resetPassword,
+  changePassword,
   getNewAccessToken,
 };

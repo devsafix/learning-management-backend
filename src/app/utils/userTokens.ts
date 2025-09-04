@@ -4,7 +4,7 @@ import AppError from "../errorHelpers/AppError";
 import { IUser } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import { generateToken, verifyToken } from "./jwt";
-import httpStatus from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 
 /**
  * Generate access + refresh tokens for a user
@@ -45,7 +45,7 @@ export const createNewAccessTokenWithRefreshToken = async (
   // Ensure user still exists
   const isUserExist = await User.findOne({ email: verifiedRefreshToken.email });
   if (!isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User does not exist");
+    throw new AppError(StatusCodes.BAD_REQUEST, "User does not exist");
   }
 
   const jwtPayload = {

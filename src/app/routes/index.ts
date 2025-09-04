@@ -9,15 +9,15 @@ export const router = Router();
 // All module-based routes are collected here
 const moduleRoutes = [
   {
-    path: "/auth", // base route for authentication (login, signup, refresh, etc.)
+    path: "/auth",
     route: AuthRoutes,
   },
   {
-    path: "/users", // base route for user management
+    path: "/users",
     route: UserRoutes,
   },
   {
-    path: "/otp", // base route for OTP related APIs
+    path: "/otp",
     route: OtpRoutes,
   },
 ];

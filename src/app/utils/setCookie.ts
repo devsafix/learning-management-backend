@@ -11,9 +11,10 @@ export interface AuthTokens {
 export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
   if (tokenInfo.accessToken) {
     res.cookie("accessToken", tokenInfo.accessToken, {
-      httpOnly: true, // JS cannot access → prevents XSS
-      secure: true, // only over HTTPS
-      sameSite: "none", // cross-site cookie allowed (e.g. frontend + backend on different domains)
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 2592000000,
     });
   }
 
@@ -22,6 +23,7 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      maxAge: 2592000000,
     });
   }
 };

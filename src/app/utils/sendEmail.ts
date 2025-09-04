@@ -29,14 +29,6 @@ interface SendEmailOptions {
   }[];
 }
 
-/**
- * Send an email using a given EJS template.
- * @param to Recipient email
- * @param subject Subject line
- * @param templateName Template filename (without extension)
- * @param templateData Variables passed to the EJS template
- * @param attachments Optional file attachments
- */
 export const sendEmail = async ({
   to,
   subject,
