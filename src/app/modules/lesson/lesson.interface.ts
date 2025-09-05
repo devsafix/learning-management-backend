@@ -7,7 +7,6 @@ export interface ILesson {
   title: string;
   videoUrl: string;
   duration: number;
-  isPreview: boolean;
   resources: string[];
   order: number;
   createdAt?: Date;

@@ -39,6 +39,45 @@ const updateUser = async (
   }).select("-password");
 };
 
+const blockUser = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  if (user.isBlocked) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User is already blocked");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { isBlocked: true },
+    { new: true, runValidators: true }
+  ).select("-password");
+
+  if (!updatedUser) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Failed to block user");
+  }
+
+  return updatedUser;
+};
+
+const unblockUser = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  if (!user.isBlocked) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User is not blocked");
+  }
+
+  user.isBlocked = false;
+  await user.save();
+
+  return user;
+};
+
 const getSingleUser = async (id: string) => {
   const user = await User.findById(id).select("-password");
   return {
@@ -58,4 +97,6 @@ export const UserServices = {
   updateUser,
   getSingleUser,
   getMe,
+  blockUser,
+  unblockUser,
 };

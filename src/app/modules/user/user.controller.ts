@@ -39,6 +39,26 @@ const updateUser = catchAsync(
   }
 );
 
+const block = async (req: Request, res: Response) => {
+  const result = await UserServices.blockUser(req.params.id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User blocked successfully",
+    data: result,
+  });
+};
+
+const unblock = async (req: Request, res: Response) => {
+  const result = await UserServices.unblockUser(req.params.id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User unblocked successfully",
+    data: result,
+  });
+};
+
 const getSingleUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -66,4 +86,11 @@ const getMe = catchAsync(
   }
 );
 
-export const UserControllers = { getUsers, updateUser, getSingleUser, getMe };
+export const UserControllers = {
+  getUsers,
+  updateUser,
+  block,
+  unblock,
+  getSingleUser,
+  getMe,
+};

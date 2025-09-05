@@ -18,6 +18,19 @@ router.get(
 // Get single login user
 router.get("/me", checkAuth, UserControllers.getMe);
 
+router.patch(
+  "/block/:id",
+  checkAuth,
+  checkRole(userRoles.ADMIN),
+  UserControllers.block
+);
+router.patch(
+  "/unblock/:id",
+  checkAuth,
+  checkRole(userRoles.ADMIN),
+  UserControllers.unblock
+);
+
 // Get single user
 router.get(
   "/:id",

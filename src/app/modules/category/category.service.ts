@@ -1,8 +1,10 @@
 import { Category } from "./category.model";
 import { ICategory } from "./category.interface";
+import slugify from "slugify";
 
 const create = async (payload: ICategory) => {
-  return await Category.create(payload);
+  const slug = slugify(payload.name, { lower: true, strict: true });
+  return await Category.create({ ...payload, slug });
 };
 
 const getAll = async () => {

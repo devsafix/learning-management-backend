@@ -7,6 +7,7 @@ import { CourseRoutes } from "../modules/course/course.route";
 import { LessonRoutes } from "../modules/lesson/lesson.route";
 import { PaymentRoutes } from "../modules/payment/payment.route";
 import { OrderRoutes } from "../modules/order/order.route";
+import { AdminRoutes } from "../modules/admin/admin.route";
 
 // Initialize Express Router
 export const router = Router();
@@ -44,6 +45,10 @@ const moduleRoutes = [
   {
     path: "/payment",
     route: PaymentRoutes,
+  },
+  {
+    path: "/admin",
+    route: AdminRoutes,
   },
 ];
 

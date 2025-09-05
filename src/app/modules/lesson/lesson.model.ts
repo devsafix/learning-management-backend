@@ -12,7 +12,6 @@ const lessonSchema = new Schema<ILesson>(
     title: { type: String, required: true },
     videoUrl: { type: String, required: true },
     duration: { type: Number, default: 0 },
-    isPreview: { type: Boolean, default: false },
     resources: [{ type: String }],
     order: { type: Number, default: 0 },
   },

@@ -17,6 +17,8 @@ export const createUserZodSchema = z.object({
       required_error: "Password is required",
     })
     .min(6, "Password must be at least 6 characters long"),
+  phone: z.string(),
+  address: z.string(),
   role: z.enum(["admin", "user"], {
     required_error: "Role is required",
     invalid_type_error: "Role must be 'admin', or 'user'",
@@ -36,13 +38,6 @@ export const updateUserZodSchema = z.object({
     })
     .optional(),
   role: z.enum(Object.values(userRoles) as [string]).optional(),
-  isDeleted: z
-    .boolean({ invalid_type_error: "isDeleted must be true or false" })
-    .optional(),
-  isVerified: z
-    .boolean({ invalid_type_error: "isVerified must be true or false" })
-    .optional(),
-
   address: z
     .string({ invalid_type_error: "Address must be string" })
     .max(200, { message: "Address cannot be exceed 200 characters" })
