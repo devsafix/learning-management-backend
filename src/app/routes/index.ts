@@ -5,6 +5,8 @@ import { OtpRoutes } from "../modules/otp/otp.route";
 import { CategoryRoutes } from "../modules/category/category.route";
 import { CourseRoutes } from "../modules/course/course.route";
 import { LessonRoutes } from "../modules/lesson/lesson.route";
+import { PaymentRoutes } from "../modules/payment/payment.route";
+import { OrderRoutes } from "../modules/order/order.route";
 
 // Initialize Express Router
 export const router = Router();
@@ -34,6 +36,14 @@ const moduleRoutes = [
   {
     path: "/lessons",
     route: LessonRoutes,
+  },
+  {
+    path: "/orders",
+    route: OrderRoutes,
+  },
+  {
+    path: "/payment",
+    route: PaymentRoutes,
   },
 ];
 

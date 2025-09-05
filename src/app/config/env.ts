@@ -23,18 +23,23 @@ interface EnvConfig {
     SMTP_HOST: string;
     SMTP_FROM: string;
   };
+  SSL: {
+    STORE_ID: string;
+    STORE_PASS: string;
+    SSL_PAYMENT_API: string;
+    SSL_VALIDATION_API: string;
+    SSL_SUCCESS_FRONTEND_URL: string;
+    SSL_FAIL_FRONTEND_URL: string;
+    SSL_CANCEL_FRONTEND_URL: string;
+    SSL_SUCCESS_BACKEND_URL: string;
+    SSL_FAIL_BACKEND_URL: string;
+    SSL_CANCEL_BACKEND_URL: string;
+    SSL_IPN_URL: string;
+  };
   REDIS_HOST: string;
   REDIS_PORT: string;
   REDIS_USERNAME: string;
   REDIS_PASSWORD: string;
-
-  SSLC_STORE_ID: string;
-  SSLC_STORE_PASSWORD: string;
-  SSLC_SANDBOX: "true" | "false";
-  SSLC_SUCCESS_URL: string;
-  SSLC_FAIL_URL: string;
-  SSLC_CANCEL_URL: string;
-  SSLC_IPN_URL: string;
 }
 
 // ---------------------- Load & Validate Env Variables ---------------------- //
@@ -62,13 +67,17 @@ const loadEnvVariables = (): EnvConfig => {
     "REDIS_PORT",
     "REDIS_USERNAME",
     "REDIS_PASSWORD",
-    "SSLC_STORE_ID",
-    "SSLC_STORE_PASSWORD",
-    "SSLC_SANDBOX",
-    "SSLC_SUCCESS_URL",
-    "SSLC_FAIL_URL",
-    "SSLC_CANCEL_URL",
-    "SSLC_IPN_URL",
+    "SSL_STORE_ID",
+    "SSL_STORE_PASS",
+    "SSL_PAYMENT_API",
+    "SSL_VALIDATION_API",
+    "SSL_IPN_URL",
+    "SSL_SUCCESS_FRONTEND_URL",
+    "SSL_FAIL_FRONTEND_URL",
+    "SSL_CANCEL_FRONTEND_URL",
+    "SSL_SUCCESS_BACKEND_URL",
+    "SSL_FAIL_BACKEND_URL",
+    "SSL_CANCEL_BACKEND_URL",
   ];
 
   // Validate presence of each required variable
@@ -98,18 +107,23 @@ const loadEnvVariables = (): EnvConfig => {
       SMTP_HOST: process.env.SMTP_HOST as string,
       SMTP_FROM: process.env.SMTP_FROM as string,
     },
+    SSL: {
+      STORE_ID: process.env.SSL_STORE_ID as string,
+      STORE_PASS: process.env.SSL_STORE_PASS as string,
+      SSL_PAYMENT_API: process.env.SSL_PAYMENT_API as string,
+      SSL_VALIDATION_API: process.env.SSL_VALIDATION_API as string,
+      SSL_IPN_URL: process.env.SSL_IPN_URL as string,
+      SSL_SUCCESS_FRONTEND_URL: process.env.SSL_SUCCESS_FRONTEND_URL as string,
+      SSL_FAIL_FRONTEND_URL: process.env.SSL_FAIL_FRONTEND_URL as string,
+      SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL as string,
+      SSL_SUCCESS_BACKEND_URL: process.env.SSL_SUCCESS_BACKEND_URL as string,
+      SSL_FAIL_BACKEND_URL: process.env.SSL_FAIL_BACKEND_URL as string,
+      SSL_CANCEL_BACKEND_URL: process.env.SSL_CANCEL_BACKEND_URL as string,
+    },
     REDIS_HOST: process.env.REDIS_HOST as string,
     REDIS_PORT: process.env.REDIS_PORT as string,
     REDIS_USERNAME: process.env.REDIS_USERNAME as string,
     REDIS_PASSWORD: process.env.REDIS_PASSWORD as string,
-
-    SSLC_STORE_ID: process.env.SSLC_STORE_ID as string,
-    SSLC_STORE_PASSWORD: process.env.SSLC_STORE_PASSWORD as string,
-    SSLC_SANDBOX: process.env.SSLC_SANDBOX as "true" | "false",
-    SSLC_SUCCESS_URL: process.env.SSLC_SUCCESS_URL as string,
-    SSLC_FAIL_URL: process.env.SSLC_FAIL_URL as string,
-    SSLC_CANCEL_URL: process.env.SSLC_CANCEL_URL as string,
-    SSLC_IPN_URL: process.env.SSLC_IPN_URL as string,
   };
 };
 
