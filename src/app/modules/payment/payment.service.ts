@@ -5,6 +5,7 @@ import { Order } from "../order/order.model";
 import { SSLServices } from "../sslCommerz/sslCommerz.service";
 import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
 import { User } from "../user/user.model";
+import { Course } from "../course/course.model";
 
 /**
  * Initialize Payment
@@ -49,6 +50,7 @@ const initPayment = async (orderId: string) => {
  * Success Payment
  */
 const successPayment = async (query: Record<string, string>) => {
+  // Find the payment and mark it as PAID
   const payment = await Payment.findOneAndUpdate(
     { transactionId: query.transactionId },
     { status: PAYMENT_STATUS.PAID },
@@ -57,7 +59,19 @@ const successPayment = async (query: Record<string, string>) => {
 
   if (!payment) throw new AppError(404, "Payment not found");
 
-  await Order.findByIdAndUpdate(payment.order, { status: "ENROLLED" });
+  // Update the order to ENROLLED
+  const order = await Order.findByIdAndUpdate(
+    payment.order,
+    { status: "ENROLLED" },
+    { new: true }
+  );
+
+  if (!order) throw new AppError(404, "Order not found");
+
+  // Increment enrolledCount in the related course
+  await Course.findByIdAndUpdate(order.course, {
+    $inc: { enrolledCount: 1 },
+  });
 
   return { success: true, message: "Payment successful, course enrolled" };
 };

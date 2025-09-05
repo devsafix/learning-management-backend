@@ -1,8 +1,15 @@
 import { Lesson } from "./lesson.model";
 import { ILesson } from "./lesson.interface";
+import { Course } from "../course/course.model";
 
 const create = async (payload: ILesson) => {
-  return await Lesson.create(payload);
+  const lesson = await Lesson.create(payload);
+
+  await Course.findByIdAndUpdate(payload.courseId, {
+    $inc: { totalLessons: 1 },
+  });
+
+  return lesson;
 };
 
 const byCourse = async (courseId: string) => {
@@ -14,7 +21,16 @@ const update = async (id: string, payload: Partial<ILesson>) => {
 };
 
 const remove = async (id: string) => {
-  return await Lesson.findByIdAndDelete(id);
+  const lesson = await Lesson.findById(id);
+  if (!lesson) return null;
+
+  await Lesson.findByIdAndDelete(id);
+
+  await Course.findByIdAndUpdate(lesson.courseId, {
+    $inc: { totalLessons: -1 },
+  });
+
+  return lesson;
 };
 
 export const LessonService = {
