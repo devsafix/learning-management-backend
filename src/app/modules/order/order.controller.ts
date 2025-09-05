@@ -6,7 +6,7 @@ import { Order } from "./order.model";
 
 const enrollCourse = catchAsync(async (req: Request, res: Response) => {
   const { courseId } = req.params;
-  const userId = req.body.student || req.user?.id;
+  const userId = req.body.student || req.user?.userId;
 
   const result = await OrderServices.enrollCourse(courseId, userId);
 
@@ -19,7 +19,7 @@ const enrollCourse = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMyCourses = catchAsync(async (req: Request, res: Response) => {
-  const studentId = req.user?.id;
+  const studentId = req.user?.userId;
 
   const orders = await Order.find({ student: studentId, status: "ENROLLED" })
     .populate("course", "title price description")
