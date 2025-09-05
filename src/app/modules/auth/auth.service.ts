@@ -88,28 +88,6 @@ const forgotPassword = async (email: string) => {
   });
 };
 
-const resetPassword = async (payload: {
-  id: string;
-  token: string;
-  newPassword: string;
-}) => {
-  const decoded = jwt.verify(
-    payload.token,
-    envVariables.JWT_ACCESS_SECRET
-  ) as JwtPayload;
-  if (payload.id !== decoded.userId)
-    throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid reset token");
-
-  const user = await User.findById(decoded.userId);
-  if (!user) throw new AppError(StatusCodes.NOT_FOUND, "User does not exist");
-
-  user.password = await bcryptjs.hash(
-    payload.newPassword,
-    Number(envVariables.BCRYPT_SALT_ROUND)
-  );
-  await user.save();
-};
-
 const changePassword = async (
   userId: string,
   oldPassword: string,
@@ -125,10 +103,7 @@ const changePassword = async (
   if (!ok)
     throw new AppError(StatusCodes.UNAUTHORIZED, "Old password incorrect");
 
-  user.password = await bcryptjs.hash(
-    newPassword,
-    Number(envVariables.BCRYPT_SALT_ROUND)
-  );
+  user.password = newPassword;
   await user.save();
 };
 
@@ -145,7 +120,6 @@ export const AuthServices = {
   registerUser,
   loginUser,
   forgotPassword,
-  resetPassword,
   changePassword,
   getNewAccessToken,
 };

@@ -2,6 +2,9 @@ import { Router } from "express";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { UserRoutes } from "../modules/user/user.route";
 import { OtpRoutes } from "../modules/otp/otp.route";
+import { CategoryRoutes } from "../modules/category/category.route";
+import { CourseRoutes } from "../modules/course/course.route";
+import { LessonRoutes } from "../modules/lesson/lesson.route";
 
 // Initialize Express Router
 export const router = Router();
@@ -19,6 +22,18 @@ const moduleRoutes = [
   {
     path: "/otp",
     route: OtpRoutes,
+  },
+  {
+    path: "/category",
+    route: CategoryRoutes,
+  },
+  {
+    path: "/course",
+    route: CourseRoutes,
+  },
+  {
+    path: "/lessons",
+    route: LessonRoutes,
   },
 ];
 

@@ -27,6 +27,14 @@ interface EnvConfig {
   REDIS_PORT: string;
   REDIS_USERNAME: string;
   REDIS_PASSWORD: string;
+
+  SSLC_STORE_ID: string;
+  SSLC_STORE_PASSWORD: string;
+  SSLC_SANDBOX: "true" | "false";
+  SSLC_SUCCESS_URL: string;
+  SSLC_FAIL_URL: string;
+  SSLC_CANCEL_URL: string;
+  SSLC_IPN_URL: string;
 }
 
 // ---------------------- Load & Validate Env Variables ---------------------- //
@@ -54,6 +62,13 @@ const loadEnvVariables = (): EnvConfig => {
     "REDIS_PORT",
     "REDIS_USERNAME",
     "REDIS_PASSWORD",
+    "SSLC_STORE_ID",
+    "SSLC_STORE_PASSWORD",
+    "SSLC_SANDBOX",
+    "SSLC_SUCCESS_URL",
+    "SSLC_FAIL_URL",
+    "SSLC_CANCEL_URL",
+    "SSLC_IPN_URL",
   ];
 
   // Validate presence of each required variable
@@ -87,6 +102,14 @@ const loadEnvVariables = (): EnvConfig => {
     REDIS_PORT: process.env.REDIS_PORT as string,
     REDIS_USERNAME: process.env.REDIS_USERNAME as string,
     REDIS_PASSWORD: process.env.REDIS_PASSWORD as string,
+
+    SSLC_STORE_ID: process.env.SSLC_STORE_ID as string,
+    SSLC_STORE_PASSWORD: process.env.SSLC_STORE_PASSWORD as string,
+    SSLC_SANDBOX: process.env.SSLC_SANDBOX as "true" | "false",
+    SSLC_SUCCESS_URL: process.env.SSLC_SUCCESS_URL as string,
+    SSLC_FAIL_URL: process.env.SSLC_FAIL_URL as string,
+    SSLC_CANCEL_URL: process.env.SSLC_CANCEL_URL as string,
+    SSLC_IPN_URL: process.env.SSLC_IPN_URL as string,
   };
 };
 

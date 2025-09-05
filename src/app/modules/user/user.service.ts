@@ -19,7 +19,7 @@ const updateUser = async (
   const isSelf = userId === decoded.userId;
   const isAdmin = decoded.role === userRoles.ADMIN;
 
-  if (!isAdmin && !isSelf) {
+  if (!isSelf) {
     throw new AppError(StatusCodes.UNAUTHORIZED, "You are not authorized");
   }
 

@@ -16,7 +16,7 @@ const lessonSchema = new Schema<ILesson>(
     resources: [{ type: String }],
     order: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 lessonSchema.index({ courseId: 1, order: 1 });
