@@ -16,7 +16,8 @@ const registerUser = async (payload: {
   name: string;
   email: string;
   password: string;
-  role: string;
+  phone: string;
+  address: string;
 }) => {
   const existingUser = await User.findOne({ email: payload.email });
   if (existingUser) {
@@ -30,6 +31,8 @@ const registerUser = async (payload: {
     id: user._id,
     email: user.email,
     role: user.role,
+    phone: user.phone,
+    address: user.address,
   };
 };
 

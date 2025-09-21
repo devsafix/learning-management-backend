@@ -19,10 +19,6 @@ export const createUserZodSchema = z.object({
     .min(6, "Password must be at least 6 characters long"),
   phone: z.string(),
   address: z.string(),
-  role: z.enum(["admin", "user"], {
-    required_error: "Role is required",
-    invalid_type_error: "Role must be 'admin', or 'user'",
-  }),
 });
 
 export const updateUserZodSchema = z.object({
