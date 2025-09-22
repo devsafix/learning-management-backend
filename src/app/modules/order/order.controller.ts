@@ -6,7 +6,7 @@ import { Order } from "./order.model";
 
 const enrollCourse = catchAsync(async (req: Request, res: Response) => {
   const { courseId } = req.params;
-  const userId = req.body.student || req.user?.userId;
+  const userId = req.user?.userId;
 
   const result = await OrderServices.enrollCourse(courseId, userId);
 
