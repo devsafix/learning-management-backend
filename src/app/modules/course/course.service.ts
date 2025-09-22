@@ -73,7 +73,10 @@ const list = async (q: any) => {
 };
 
 const detail = async (slug: string) => {
-  const c = await Course.findOne({ slug });
+  const c = await Course.findOne({ slug })
+    .populate("categoryId", "name slug")
+    .populate("instructorId", "name email");
+
   if (!c) throw new AppError(StatusCodes.NOT_FOUND, "Course not found");
   return c;
 };

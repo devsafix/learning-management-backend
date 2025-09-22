@@ -12,7 +12,7 @@ export interface ICourse {
   level: "beginner" | "intermediate" | "advanced";
   categoryId: Types.ObjectId | ICategory;
   instructorId: Types.ObjectId | IUser;
-  thumbnail?: string;
+  thumbnail: string;
   totalLessons: number;
   enrolledCount: number;
   averageRating: number;

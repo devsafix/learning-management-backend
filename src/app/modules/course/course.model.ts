@@ -20,7 +20,7 @@ const courseSchema = new Schema<ICourse>(
       index: true,
     },
     instructorId: { type: Types.ObjectId, ref: "User", required: true },
-    thumbnail: { type: String },
+    thumbnail: { type: String, required: true },
     totalLessons: { type: Number, default: 0 },
     enrolledCount: { type: Number, default: 0 },
     averageRating: { type: Number, default: 0 },
