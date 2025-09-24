@@ -1,6 +1,8 @@
 import { Category } from "./category.model";
 import { ICategory } from "./category.interface";
 import slugify from "slugify";
+import { Course } from "../course/course.model";
+import AppError from "../../errorHelpers/AppError";
 
 const create = async (payload: ICategory) => {
   const slug = slugify(payload.name, { lower: true, strict: true });
@@ -16,6 +18,13 @@ const update = async (id: string, payload: Partial<ICategory>) => {
 };
 
 const remove = async (id: string) => {
+  const hasCourses = await Course.exists({ categoryId: id });
+  if (hasCourses) {
+    throw new AppError(
+      400,
+      "Cannot delete category. Courses are linked to this category."
+    );
+  }
   return await Category.findByIdAndDelete(id);
 };
 
