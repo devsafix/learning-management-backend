@@ -5,7 +5,17 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 
 const create = catchAsync(async (req: Request, res: Response) => {
+  if (!req.body || !req.body.name) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: "Category name is required",
+      data: null,
+    });
+  }
+
   const category = await CategoryService.create(req.body);
+
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.CREATED,

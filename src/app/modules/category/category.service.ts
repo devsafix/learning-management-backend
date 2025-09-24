@@ -5,6 +5,7 @@ import { Course } from "../course/course.model";
 import AppError from "../../errorHelpers/AppError";
 
 const create = async (payload: ICategory) => {
+
   const slug = slugify(payload.name, { lower: true, strict: true });
   return await Category.create({ ...payload, slug });
 };

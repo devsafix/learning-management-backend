@@ -9,10 +9,10 @@ import notFound from "./app/middlewares/notFound";
 const app: Application = express();
 
 // ---------------------- Global Middlewares ---------------------- //
-app.use(cors({ origin: envVariables.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors({ origin: envVariables.FRONTEND_URL, credentials: true }));
 
 // ---------------------- Application Routes ---------------------- //
 app.use("/api/v1/", router);
