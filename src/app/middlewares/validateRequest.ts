@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema, ZodError } from "zod";
@@ -11,15 +12,25 @@ export const validateRequest = (schema: ZodSchema<any>) => {
     next: NextFunction
   ): Promise<void> => {
     try {
-      // If request contains a nested "data" field (e.g., multipart/form-data), parse it
-      if (req.body.data) {
-        req.body = JSON.parse(req.body.data);
+      let body = req.body;
+
+      // If request contains nested "data" (e.g., multipart/form-data with JSON inside "data")
+      if (body?.data) {
+        try {
+          body = JSON.parse(body.data);
+        } catch (e) {
+          res.status(400).json({
+            success: false,
+            message: "Invalid JSON in 'data' field",
+          });
+          return;
+        }
       }
 
-      // Validate request body against the Zod schema
-      req.body = await schema.parseAsync(req.body);
+      // Validate request body
+      req.body = await schema.parseAsync(body);
 
-      next(); // Validation passed, proceed to next middleware/controller
+      next();
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).json({
@@ -29,7 +40,7 @@ export const validateRequest = (schema: ZodSchema<any>) => {
         });
         return;
       }
-      next(error); // Pass any other errors to global error handler
+      next(error);
     }
   };
 };
