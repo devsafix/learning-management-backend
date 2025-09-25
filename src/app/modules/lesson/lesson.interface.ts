@@ -3,7 +3,7 @@ import { ICourse } from "../course/course.interface";
 
 export interface ILesson {
   _id?: Types.ObjectId;
-  courseId: Types.ObjectId | ICourse;
+  courseId: Types.ObjectId | ICourse | string;
   title: string;
   videoUrl: string;
   duration: number;
