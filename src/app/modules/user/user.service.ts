@@ -7,11 +7,7 @@ import { userRoles } from "./user.constant";
 import { StatusCodes } from "http-status-codes";
 
 const getAllUsers = async () => {
-  console.log("Fetching all users from database");
-
   const users = await User.find().select("-password").sort({ createdAt: -1 });
-
-  console.log(`Found ${users.length} users`);
   return users;
 };
 
@@ -20,8 +16,6 @@ const updateUser = async (
   payload: Partial<IUser>,
   decoded: JwtPayload
 ) => {
-  console.log("Update user service called:", { userId, payload, decoded });
-
   const isSelf = userId === decoded.userId;
   const isAdmin = decoded.role === userRoles.ADMIN;
 
@@ -44,11 +38,9 @@ const updateUser = async (
     delete (payload as any).role;
     delete (payload as any).isVerified;
     delete (payload as any).isBlocked;
-    console.log("Non-admin user updating self, removed sensitive fields");
   }
 
   // If admin is updating, allow all fields
-  console.log("Updating user with payload:", payload);
 
   const updatedUser = await User.findByIdAndUpdate(userId, payload, {
     new: true,
@@ -59,13 +51,10 @@ const updateUser = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Failed to update user");
   }
 
-  console.log("User updated successfully");
   return updatedUser;
 };
 
 const blockUser = async (userId: string) => {
-  console.log("Block user service called:", userId);
-
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -88,13 +77,10 @@ const blockUser = async (userId: string) => {
     );
   }
 
-  console.log("User blocked successfully");
   return updatedUser;
 };
 
 const unblockUser = async (userId: string) => {
-  console.log("Unblock user service called:", userId);
-
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -117,35 +103,28 @@ const unblockUser = async (userId: string) => {
     );
   }
 
-  console.log("User unblocked successfully");
   return updatedUser;
 };
 
 const getSingleUser = async (id: string) => {
-  console.log("Get single user service called:", id);
-
   const user = await User.findById(id).select("-password");
 
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  console.log("User found successfully");
   return {
     data: user,
   };
 };
 
 const getMe = async (userId: string) => {
-  console.log("Get me service called:", userId);
-
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  console.log("Current user profile retrieved successfully");
   return {
     data: user,
   };

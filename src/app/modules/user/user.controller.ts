@@ -7,8 +7,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
-  console.log("Get all users request");
-
   const result = await UserServices.getAllUsers();
 
   sendResponse(res, {
@@ -22,7 +20,6 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
 const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
-    console.log("Update user request:", { userId, body: req.body });
 
     if (!userId) {
       return sendResponse(res, {
@@ -51,8 +48,6 @@ const updateUser = catchAsync(
       }
     }
 
-    console.log("Processed user data:", userData);
-
     const user = await UserServices.updateUser(
       userId,
       userData,
@@ -70,7 +65,6 @@ const updateUser = catchAsync(
 
 const block = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.id;
-  console.log("Block user request:", userId);
 
   if (!userId) {
     return sendResponse(res, {
@@ -93,7 +87,6 @@ const block = catchAsync(async (req: Request, res: Response) => {
 
 const unblock = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.id;
-  console.log("Unblock user request:", userId);
 
   if (!userId) {
     return sendResponse(res, {
@@ -117,7 +110,6 @@ const unblock = catchAsync(async (req: Request, res: Response) => {
 const getSingleUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    console.log("Get single user request:", id);
 
     if (!id) {
       return sendResponse(res, {
@@ -142,7 +134,6 @@ const getSingleUser = catchAsync(
 const getMe = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user as JwtPayload;
-    console.log("Get me request for user:", decodedToken.userId);
 
     const result = await UserServices.getMe(decodedToken.userId);
 
