@@ -8,6 +8,8 @@ import { LessonController } from "./lesson.controller";
 
 const router = express.Router();
 
+router.get("/", checkAuth, checkRole(userRoles.ADMIN), LessonController.list);
+
 router.post(
   "/",
   checkAuth,
@@ -16,6 +18,7 @@ router.post(
   LessonController.create
 );
 router.get("/by-course/:courseId", LessonController.byCourse);
+router.get("/:id", LessonController.detail);
 router.patch(
   "/:id",
   checkAuth,
