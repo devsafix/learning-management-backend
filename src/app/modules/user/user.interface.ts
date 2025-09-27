@@ -11,4 +11,6 @@ export interface IUser {
   role: UserRole;
   isBlocked?: boolean;
   isVerified?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
