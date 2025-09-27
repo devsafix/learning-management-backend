@@ -6,8 +6,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  console.log("Create lesson request body:", req.body);
-
   // Check if request body exists
   if (!req.body || Object.keys(req.body).length === 0) {
     return sendResponse(res, {
@@ -55,8 +53,6 @@ const create = catchAsync(async (req: Request, res: Response) => {
     lessonData.resources = [lessonData.resources];
   }
 
-  console.log("Processed lesson data:", lessonData);
-
   const lesson = await LessonService.create(lessonData);
 
   sendResponse(res, {
@@ -68,8 +64,6 @@ const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 const list = catchAsync(async (req: Request, res: Response) => {
-  console.log("Get all lessons request");
-
   const lessons = await LessonService.list();
 
   sendResponse(res, {
@@ -82,7 +76,6 @@ const list = catchAsync(async (req: Request, res: Response) => {
 
 const byCourse = catchAsync(async (req: Request, res: Response) => {
   const { courseId } = req.params;
-  console.log("Get lessons by course ID:", courseId);
 
   if (!courseId) {
     return sendResponse(res, {
@@ -105,7 +98,6 @@ const byCourse = catchAsync(async (req: Request, res: Response) => {
 
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log("Update lesson request:", { id, body: req.body });
 
   if (!id) {
     return sendResponse(res, {
@@ -144,8 +136,6 @@ const update = catchAsync(async (req: Request, res: Response) => {
     lessonData.resources = [lessonData.resources];
   }
 
-  console.log("Processed update data:", lessonData);
-
   const updated = await LessonService.update(id, lessonData);
 
   sendResponse(res, {
@@ -158,7 +148,6 @@ const update = catchAsync(async (req: Request, res: Response) => {
 
 const remove = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log("Delete lesson request:", id);
 
   if (!id) {
     return sendResponse(res, {
@@ -181,7 +170,6 @@ const remove = catchAsync(async (req: Request, res: Response) => {
 
 const detail = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log("Get lesson detail request:", id);
 
   if (!id) {
     return sendResponse(res, {
