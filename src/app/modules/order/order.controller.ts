@@ -54,7 +54,41 @@ const getMyCourses = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getEnrollmentStatus = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+  const studentId = req.user?.userId;
+
+  console.log("Checking enrollment status:", { studentId, courseId });
+
+  if (!studentId) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.UNAUTHORIZED,
+      success: false,
+      message: "User not authenticated",
+      data: null,
+    });
+  }
+
+  const enrollment = await Order.findOne({
+    student: studentId,
+    course: courseId,
+    status: "ENROLLED",
+  });
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Enrollment status retrieved",
+    data: {
+      isEnrolled: !!enrollment,
+      enrollmentId: enrollment?._id || null,
+      enrolledAt: enrollment?.createdAt || null,
+    },
+  });
+});
+
 export const OrderController = {
   enrollCourse,
   getMyCourses,
+  getEnrollmentStatus,
 };
