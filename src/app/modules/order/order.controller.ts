@@ -22,8 +22,6 @@ const enrollCourse = catchAsync(async (req: Request, res: Response) => {
 const getMyCourses = catchAsync(async (req: Request, res: Response) => {
   const studentId = req.user?.userId;
 
-  console.log("Fetching enrolled courses for user:", studentId);
-
   if (!studentId) {
     return sendResponse(res, {
       statusCode: StatusCodes.UNAUTHORIZED,
@@ -44,8 +42,6 @@ const getMyCourses = catchAsync(async (req: Request, res: Response) => {
     .populate("student", "name email")
     .sort({ createdAt: -1 });
 
-  console.log(`Found ${orders.length} enrolled courses for user ${studentId}`);
-
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -57,8 +53,6 @@ const getMyCourses = catchAsync(async (req: Request, res: Response) => {
 const getEnrollmentStatus = catchAsync(async (req: Request, res: Response) => {
   const { courseId } = req.params;
   const studentId = req.user?.userId;
-
-  console.log("Checking enrollment status:", { studentId, courseId });
 
   if (!studentId) {
     return sendResponse(res, {

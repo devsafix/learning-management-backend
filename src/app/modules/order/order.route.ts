@@ -4,5 +4,10 @@ import { checkAuth } from "../../middlewares/checkAuth";
 
 export const OrderRoutes = express.Router();
 
-OrderRoutes.post("/enroll/:courseId", checkAuth, OrderController.enrollCourse);
 OrderRoutes.get("/my-courses", checkAuth, OrderController.getMyCourses);
+OrderRoutes.post("/enroll/:courseId", checkAuth, OrderController.enrollCourse);
+OrderRoutes.get(
+  "/enrollment-status/:courseId",
+  checkAuth,
+  OrderController.getEnrollmentStatus
+);
