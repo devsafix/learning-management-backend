@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { OrderServices } from "./order.service";
 import { Order } from "./order.model";
+import { StatusCodes } from "http-status-codes";
 
 const enrollCourse = catchAsync(async (req: Request, res: Response) => {
   const { courseId } = req.params;
@@ -21,14 +22,34 @@ const enrollCourse = catchAsync(async (req: Request, res: Response) => {
 const getMyCourses = catchAsync(async (req: Request, res: Response) => {
   const studentId = req.user?.userId;
 
-  const orders = await Order.find({ student: studentId, status: "ENROLLED" })
-    .populate("course", "title price description")
-    .populate("student", "name email");
+  console.log("Fetching enrolled courses for user:", studentId);
+
+  if (!studentId) {
+    return sendResponse(res, {
+      statusCode: StatusCodes.UNAUTHORIZED,
+      success: false,
+      message: "User not authenticated",
+      data: null,
+    });
+  }
+
+  const orders = await Order.find({
+    student: studentId,
+    status: "ENROLLED",
+  })
+    .populate(
+      "course",
+      "title price description thumbnail slug categoryId totalLessons enrolledCount averageRating"
+    )
+    .populate("student", "name email")
+    .sort({ createdAt: -1 });
+
+  console.log(`Found ${orders.length} enrolled courses for user ${studentId}`);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     success: true,
-    message: "Enrolled courses retrieved",
+    message: "Enrolled courses retrieved successfully",
     data: orders,
   });
 });

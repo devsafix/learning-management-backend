@@ -17,7 +17,7 @@ router.post(
   validateRequest(createLessonZod),
   LessonController.create
 );
-router.get("/by-course/:courseId", LessonController.byCourse);
+router.get("/by-course/:courseId", checkAuth, LessonController.byCourse);
 router.get("/:id", LessonController.detail);
 router.patch(
   "/:id",
