@@ -3,6 +3,8 @@ import AppError from "../../errorHelpers/AppError";
 import { StatusCodes } from "http-status-codes";
 import { Course } from "./course.model";
 import slugify from "slugify";
+import { Lesson } from "../lesson/lesson.model";
+import { Order } from "../order/order.model";
 
 const create = async (payload: any, ownerId: string) => {
   const slug = slugify(payload.title, { lower: true, strict: true });
@@ -25,8 +27,14 @@ const update = async (id: string, payload: any) => {
 };
 
 const remove = async (id: string) => {
-  const c = await Course.findByIdAndDelete(id);
-  if (!c) throw new AppError(StatusCodes.NOT_FOUND, "Course not found");
+  const course = await Course.findByIdAndDelete(id);
+  if (!course) throw new AppError(StatusCodes.NOT_FOUND, "Course not found");
+
+  // cascade delete
+  await Lesson.deleteMany({ courseId: id });
+  await Order.deleteMany({ course: id });
+
+  return course;
 };
 
 const list = async (q: any) => {
