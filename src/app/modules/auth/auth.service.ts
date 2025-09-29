@@ -38,8 +38,12 @@ const registerUser = async (payload: {
 
 const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email }).select("+password");
-  if (!user || user.isBlocked) {
+  if (!user) {
     throw new AppError(StatusCodes.UNAUTHORIZED, "User not found or blocked");
+  }
+
+  if (user.isBlocked) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "The user has been blocked");
   }
 
   const isPasswordValid = await BcryptHelper.comparePassword(
