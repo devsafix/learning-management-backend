@@ -3,9 +3,10 @@ import { ICategory } from "./category.interface";
 import slugify from "slugify";
 import { Course } from "../course/course.model";
 import AppError from "../../errorHelpers/AppError";
+import { Lesson } from "../lesson/lesson.model";
+import { Order } from "../order/order.model";
 
 const create = async (payload: ICategory) => {
-
   const slug = slugify(payload.name, { lower: true, strict: true });
   return await Category.create({ ...payload, slug });
 };
@@ -19,13 +20,18 @@ const update = async (id: string, payload: Partial<ICategory>) => {
 };
 
 const remove = async (id: string) => {
-  const hasCourses = await Course.exists({ categoryId: id });
-  if (hasCourses) {
-    throw new AppError(
-      400,
-      "Cannot delete category. Courses are linked to this category."
-    );
+  const category = await Category.findById(id);
+  if (!category) throw new AppError(404, "Category not found");
+
+  // delete all courses under this category
+  const courses = await Course.find({ categoryId: id });
+
+  for (const course of courses) {
+    await Course.findByIdAndDelete(course._id);
+    await Lesson.deleteMany({ courseId: course._id });
+    await Order.deleteMany({ course: course._id });
   }
+
   return await Category.findByIdAndDelete(id);
 };
 
