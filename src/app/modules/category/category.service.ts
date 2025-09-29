@@ -16,7 +16,14 @@ const getAll = async () => {
 };
 
 const update = async (id: string, payload: Partial<ICategory>) => {
-  return await Category.findByIdAndUpdate(id, payload, { new: true });
+  if (payload.name) {
+    payload.slug = slugify(payload.name, { lower: true, strict: true });
+  }
+
+  return await Category.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
 };
 
 const remove = async (id: string) => {
